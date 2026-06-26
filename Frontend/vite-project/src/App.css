@@ -1,0 +1,661 @@
+/* ═══════════════════════════════════════════════════════════
+   APP.CSS  —  Employee Management System
+   All selectors use class names from the existing JSX:
+   .container  .controls  .form  .employee-grid
+   .card  .btn-group  .edit-btn  .delete-btn
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Page shell ────────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+/* ── Dashboard header ──────────────────────────────────────── */
+.container > h1,
+.container > h2:first-of-type {
+  /* Main page title */
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.6px;
+  margin-bottom: 4px;
+}
+
+/* ── Stat / total-employees strip ──────────────────────────── */
+
+/* If you render a <p> or <div> with total count right below h1 */
+.container > p:first-of-type,
+.container > div.stats,
+.stat-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--blue-50);
+  color: var(--blue-700);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--blue-200);
+  margin-bottom: 32px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Total employees card (works if wrapped in a div.total or p) ── */
+.total-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 14px rgba(37,99,235,.30);
+  margin-bottom: 28px;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+/* Fallback: style the raw <p> total employees text */
+.container > p {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-600);
+  background: var(--blue-50);
+  border: 1px solid var(--blue-200);
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  margin-bottom: 28px;
+}
+
+/* ── Controls row (search + filter) ────────────────────────── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* Search input inside .controls */
+.controls input[type="text"],
+.controls input[type="search"] {
+  flex: 1;
+  min-width: 200px;
+  height: 44px;
+  padding: 0 16px 0 42px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E")
+    no-repeat 14px center;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--gray-800);
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--duration) var(--ease),
+              box-shadow var(--duration) var(--ease),
+              background-color var(--duration) var(--ease);
+  outline: none;
+}
+
+.controls input[type="text"]::placeholder,
+.controls input[type="search"]::placeholder {
+  color: var(--gray-400);
+}
+
+.controls input[type="text"]:hover,
+.controls input[type="search"]:hover {
+  border-color: var(--gray-300);
+}
+
+.controls input[type="text"]:focus,
+.controls input[type="search"]:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  background-color: var(--surface);
+}
+
+/* Department filter select inside .controls */
+.controls select {
+  height: 44px;
+  padding: 0 36px 0 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-700);
+  box-shadow: var(--shadow-xs);
+  appearance: none;
+  cursor: pointer;
+  min-width: 160px;
+  outline: none;
+  transition: border-color var(--duration) var(--ease),
+              box-shadow var(--duration) var(--ease);
+}
+
+.controls select:hover  { border-color: var(--gray-300); }
+.controls select:focus  { border-color: var(--blue-600); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+
+/* ── Add-employee form ─────────────────────────────────────── */
+.form {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 36px;
+  box-shadow: var(--shadow-md);
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle blue left accent bar */
+.form::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--blue-600), var(--blue-500));
+  border-radius: 4px 0 0 4px;
+}
+
+/* Inputs inside .form */
+.form input[type="text"],
+.form input[type="number"],
+.form input {
+  flex: 1;
+  min-width: 150px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--gray-50);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--gray-800);
+  outline: none;
+  transition: border-color var(--duration) var(--ease),
+              box-shadow var(--duration) var(--ease),
+              background-color var(--duration) var(--ease);
+  box-shadow: var(--shadow-xs);
+}
+
+.form input::placeholder { color: var(--gray-400); }
+
+.form input:hover {
+  border-color: var(--gray-300);
+  background: var(--surface);
+}
+
+.form input:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  background: var(--surface);
+}
+
+/* Add button inside .form */
+.form button,
+.form button[type="submit"],
+.form button[type="button"] {
+  height: 44px;
+  padding: 0 24px;
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37,99,235,.30);
+  transition: all var(--duration) var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.form button:hover {
+  background: linear-gradient(135deg, var(--blue-700), var(--blue-800));
+  box-shadow: 0 6px 20px rgba(37,99,235,.40);
+  transform: translateY(-1px);
+}
+
+.form button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(37,99,235,.25);
+}
+
+.form button:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* ── Employee grid ─────────────────────────────────────────── */
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 20px;
+}
+
+/* ── Employee card ─────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: box-shadow var(--duration) var(--ease),
+              transform var(--duration) var(--ease),
+              border-color var(--duration) var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue-600), var(--blue-500));
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: var(--blue-200);
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+/* ── Card: employee name (h2 or h3 inside .card) ───────────── */
+.card h2,
+.card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.3;
+}
+
+/* Avatar initials circle auto-generated via CSS */
+.card h2::before,
+.card h3::before {
+  content: attr(data-initials);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--blue-100), var(--blue-200));
+  color: var(--blue-700);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+/* ── Card: paragraph / info lines (Department, Salary) ─────── */
+.card p {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-100);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.card p strong {
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: 14px;
+}
+
+/* Department badge — target the department value */
+.card p:nth-of-type(1) strong,
+.card p:first-of-type strong {
+  background: var(--blue-50);
+  color: var(--blue-700);
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border: 1px solid var(--blue-200);
+}
+
+/* Salary highlighted green */
+.card p:nth-of-type(2) strong,
+.card p:last-of-type strong {
+  color: var(--green-600);
+  font-size: 15px;
+  font-weight: 700;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.2px;
+}
+
+/* ── Button group ──────────────────────────────────────────── */
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* ── Shared button base ────────────────────────────────────── */
+.edit-btn,
+.delete-btn {
+  flex: 1;
+  height: 38px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all var(--duration) var(--ease);
+  outline: none;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ripple-ish press effect */
+.edit-btn::after,
+.delete-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.15s var(--ease);
+}
+.edit-btn:active::after,
+.delete-btn:active::after {
+  background: rgba(255,255,255,0.18);
+}
+
+/* ── Edit button — blue ────────────────────────────────────── */
+.edit-btn {
+  background: var(--blue-600);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,.25);
+}
+
+.edit-btn:hover {
+  background: var(--blue-700);
+  box-shadow: 0 4px 14px rgba(37,99,235,.38);
+  transform: translateY(-1px);
+}
+
+.edit-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(37,99,235,.20);
+}
+
+.edit-btn:focus-visible {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+/* ── Delete button — red ───────────────────────────────────── */
+.delete-btn {
+  background: var(--red-50);
+  color: var(--red-600);
+  border: 1.5px solid rgba(220,38,38,.15);
+}
+
+.delete-btn:hover {
+  background: var(--red-600);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(220,38,38,.30);
+  transform: translateY(-1px);
+}
+
+.delete-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(220,38,38,.20);
+}
+
+.delete-btn:focus-visible {
+  outline: 2px solid var(--red-600);
+  outline-offset: 2px;
+}
+
+/* ── Edit inline form (inside .card) ───────────────────────── */
+.card form,
+.card .edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card form input,
+.card .edit-form input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--gray-50);
+  font-size: 14px;
+  color: var(--gray-800);
+  outline: none;
+  transition: border-color var(--duration) var(--ease),
+              box-shadow var(--duration) var(--ease);
+}
+
+.card form input:focus,
+.card .edit-form input:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  background: var(--surface);
+}
+
+.card form .btn-group,
+.card .edit-form .btn-group {
+  margin-top: 2px;
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.employee-grid:empty::after,
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 40px;
+  text-align: center;
+  color: var(--gray-400);
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  background: var(--blue-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 4px;
+  border: 1.5px solid var(--blue-200);
+  color: var(--blue-600);
+}
+
+.empty-state h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 2px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: var(--gray-400);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* ── Section divider ───────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.3px;
+}
+
+.section-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--gray-200);
+}
+
+/* ── App-level heading block above the form ────────────────── */
+.container > h1 {
+  text-align: center;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--gray-900), var(--blue-700));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.container > p {
+  text-align: center;
+}
+
+/* ── Responsive — tablet ───────────────────────────────────── */
+@media (max-width: 900px) {
+  .container {
+    padding: 28px 20px 60px;
+  }
+
+  .employee-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .form {
+    padding: 20px;
+  }
+}
+
+/* ── Responsive — mobile ───────────────────────────────────── */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px 16px 48px;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .controls input[type="text"],
+  .controls input[type="search"],
+  .controls select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .form {
+    padding: 18px 16px;
+    gap: 10px;
+  }
+
+  .form input {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .form button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .employee-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    flex: unset;
+    width: 100%;
+  }
+}
+
+/* ── Very small screens ────────────────────────────────────── */
+@media (max-width: 380px) {
+  .container { padding: 16px 12px 40px; }
+  .card { padding: 16px; }
+}
