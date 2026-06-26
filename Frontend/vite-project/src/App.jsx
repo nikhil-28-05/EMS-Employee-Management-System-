@@ -13,7 +13,7 @@ function App() {
   const [departmentFilter, setDepartmentFilter] = useState("All");
   const [editingId, setEditingId] = useState(null);
 
-  const API_URL = "http://localhost:5100/employees";
+  const API_URL = "https://ems-backend-oglm.onrender.com/employees";
 
   // Fetch Employees
   const getEmployees = async () => {
